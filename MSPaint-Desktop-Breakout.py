@@ -1,6 +1,9 @@
 import argparse
 from PIL import Image
 
+# Requirements.txt
+# pip install pillow
+
 def string_to_rgb(input_string):
     # Ensure input string length is a multiple of 3 by padding with spaces
     while len(input_string) % 3 != 0:
