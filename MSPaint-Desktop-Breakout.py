@@ -5,6 +5,8 @@ from PIL import Image
 # Requirements.txt
 # pip install pillow
 
+# Reference Blog - https://tzusec.com/how-to-launch-command-prompt-and-powershell-from-ms-paint/
+
 def string_to_rgb(input_string):
     # Ensure input string length is a multiple of 3 by padding with spaces
     while len(input_string) % 3 != 0:
