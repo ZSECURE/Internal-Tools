@@ -55,13 +55,6 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    // Add the user to the sudo group
-    //snprintf(command, sizeof(command), "usermod -aG sudo %s", username);
-    //if (system(command) != 0) {
-    //   fprintf(stderr, "Failed to add user to sudo group.\n");
-    //    exit(EXIT_FAILURE);
-    //}
-
     // Set the password with capitalized first letter
     snprintf(command, sizeof(command), "echo \"%s:%s1!\" | chpasswd", username, capitalised_username);
     if (system(command) != 0) {
@@ -69,7 +62,35 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    printf("User %s created and password set to %s1!\n", username, capitalised_username);
+    // Create .ssh directory in the user's home directory
+    snprintf(command, sizeof(command), "mkdir -p /home/%s/.ssh", username);
+    if (system(command) != 0) {
+        fprintf(stderr, "Failed to create .ssh directory.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Set permissions on the .ssh directory
+    snprintf(command, sizeof(command), "chown %s:%s /home/%s/.ssh && chmod 700 /home/%s/.ssh", username, username, username, username);
+    if (system(command) != 0) {
+        fprintf(stderr, "Failed to set permissions on .ssh directory.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Create an empty authorized_keys file
+    snprintf(command, sizeof(command), "touch /home/%s/.ssh/authorized_keys", username);
+    if (system(command) != 0) {
+        fprintf(stderr, "Failed to create authorized_keys file.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Set permissions on the authorized_keys file
+    snprintf(command, sizeof(command), "chown %s:%s /home/%s/.ssh/authorized_keys && chmod 600 /home/%s/.ssh/authorized_keys", username, username, username, username);
+    if (system(command) != 0) {
+        fprintf(stderr, "Failed to set permissions on authorized_keys file.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("User %s created, password set to %s1!, .ssh directory and authorized_keys file created with correct permissions.\n", username, capitalised_username);
 
     return 0;
 }
